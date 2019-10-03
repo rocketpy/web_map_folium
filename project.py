@@ -91,7 +91,7 @@ import pandas as pd
 data = pd.read_csv("file_name.txt")
 lat = data['LAT']
 lon = data['LON']
-elevation = data['ELEV']
+height = data['ELEV']
 
 #  func to change colors
 def color_change(height):
@@ -106,10 +106,45 @@ def color_change(height):
 map = folium.Map(location=[35.123456,95.1234567], zoom_start = 5, tiles = "Mapbox bright")
 
 # markers
-for lat, lon, elevation in zip(lat, lon, elevation):
-    folium.CircleMarker(location=[lat, lon], radius = 9, popup=str(elevation)+" m", fill_color=color_change(elevation), color="gray", fill_opacity = 0.9).add_to(map)
+for lat, lon, elevation in zip(lat, lon, height):
+    folium.CircleMarker(location=[lat, lon], radius = 9, popup=str(elevation)+" m", fill_color=color_change(height), color="gray", fill_opacity = 0.9).add_to(map)
 
 # for black chart use :  tiles= "CartoDB dark_matter"
     
+map.save("map.html")
+"""
+
+"""
+# group markers by ...
+import folium
+from folium.plugins import MarkerCluster
+import pandas as pd
+
+
+data = pd.read_csv("file_name.txt")
+lat = data['LAT']
+lon = data['LON']
+height = data['ELEV']
+
+# change colors
+def color_change(height):
+    if(height < 1000):
+        return('green')
+    elif(1000 <= height <3000):
+        return('orange')
+    else:
+        return('red')
+
+
+map = folium.Map(location=[35.123456, 95.1234567], zoom_start = 5, tiles = "CartoDB dark_matter")
+
+# cluster
+marker_cluster = MarkerCluster().add_to(map)
+
+#  for cluster
+for lat, lon, elevation in zip(lat, lon, height):
+    folium.CircleMarker(location=[lat, lon], radius = 9, popup=str(elevation)+" m", fill_color=color_change(height), color="gray", fill_opacity = 0.9).add_to(marker_cluster)
+
+
 map.save("map.html")
 """
