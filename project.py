@@ -48,3 +48,30 @@ for lat, lon, elevation in zip(lat, lon, elevation):
 map.save("map.html")
 
 """
+#  markers with a diferent colors
+import folium
+import pandas as pd
+
+
+data = pd.read_csv("file_name.txt")
+lat = data['LAT']
+lon = data['LON']
+elevation = data['ELEV']
+
+
+def color_change(height):
+    if(height < 1000):
+        return('green')
+    elif(1000 <= height <3000):
+        return('orange')
+    else:
+        return('red')
+
+# base map
+map = folium.Map(location=[57.123456,95.1234567], zoom_start = 5, tiles = "Mapbox bright")
+
+# adding a markers
+for lat, lon, elevation in zip(lat, lon, elevation):
+    folium.Marker(location=[lat, lon], popup=str(elevation), icon=folium.Icon(color = color_change(elevation))).add_to(map)
+
+map.save("map.html")
